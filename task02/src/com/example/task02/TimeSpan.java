@@ -10,43 +10,85 @@ public class TimeSpan {
         inHours = hours;
         inMinutes = minutes;
         inSeconds = seconds;
+        transformTime();
     }
 
-    public int GetHours(){
+    public int getHours(){
         return inHours;
     }
-    public void SetHours(int inHours){
+    public void setHours(int inHours){
+        if (inHours < 0) {
+            throw new IllegalArgumentException("Часы не могут быть отрицательными");
+        }
         this.inHours = inHours;
     }
 
-    public int GetMinutes(){
+    public int getMinutes(){
         return inMinutes;
     }
-    public void SetMinutes(int inMinutes){
+    public void setMinutes(int inMinutes){
+        if (inMinutes < 0) {
+            throw new IllegalArgumentException("Минуты не могут быть отрицательными");
+        }
         this.inMinutes = inMinutes;
+        transformTime();
     }
 
-    public int GetSeconds(){
+    public int getSeconds(){
         return inSeconds;
     }
-    public void SetSeconds(int inSeconds){
+    public void setSeconds(int inSeconds){
+        if (inSeconds < 0) {
+            throw new IllegalArgumentException("Секунды не могут быть отрицательными");
+        }
         this.inSeconds = inSeconds;
+        transformTime();
     }
 
-    void add(TimeSpan time){
+    private void transformTime(){
+        if(inSeconds >= 60) {
+            inMinutes += inSeconds / 60;
+            inSeconds %= 60;
+        }
+
+        if (inMinutes >= 60){
+            inHours += inMinutes / 60;
+            inMinutes %= 60;
+        }
+
+        // Обрабатываем отрицательные секунды
+        if (inSeconds < 0){
+            inSeconds = - inSeconds;
+            int borrowMinutes = (inSeconds + 59) / 60;
+            inMinutes -= borrowMinutes;
+            inSeconds = (borrowMinutes * 60) - inSeconds;
+        }
+
+        // Обрабатываем отрицательные минуты
+        if(inMinutes < 0){
+            inMinutes = -inMinutes;
+            int borrowHours = (inMinutes + 59) / 60;
+            inHours -= borrowHours;
+            inMinutes = (borrowHours * 60) - inMinutes;
+        }
+    }
+
+    public void add(TimeSpan time){
         this.inHours += time.inHours;
         this.inMinutes += time.inMinutes;
         this.inSeconds += time.inSeconds;
+        transformTime();
     }
 
-    void subtract(TimeSpan time){
+    public void subtract(TimeSpan time){
         this.inHours -= time.inHours;
         this.inMinutes -= time.inMinutes;
         this.inSeconds -= time.inSeconds;
+        transformTime(); // также исправляет отрицательное значение
     }
 
     public String toString(){
-        return String.format("Интервал времени: %d часов %d минут %d сек", inHours, inMinutes, inSeconds);
+        return String.format("Временной интервал: %d ч %d мин %d сек", inHours, inMinutes, inSeconds);
     }
 
 }
