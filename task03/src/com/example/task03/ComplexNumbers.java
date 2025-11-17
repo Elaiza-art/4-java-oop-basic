@@ -23,19 +23,16 @@ public class ComplexNumbers {
     }
 
     public String toString() {
-        if (realPart == 0) {
-            // Только мнимая часть
-            if (imaginaryPart == 0) {
-                return String.format("Комплексное число: 0");
-            } else {
-                return String.format("Комплексное число: %.2fi", imaginaryPart);
-            }
-        } else if (imaginaryPart > 0) {
-            return String.format("Комплексное число: %.2f + %.2fi", realPart, imaginaryPart);
+        if (realPart == 0 && imaginaryPart == 0) {
+            return "Комплексное число: 0";
+        } else if (realPart == 0) {
+            return String.format("Комплексное число: %.2fi", imaginaryPart);
         } else if (imaginaryPart == 0) {
             return String.format("Комплексное число: %.2f", realPart);
+        } else if (imaginaryPart > 0) {
+            return String.format("Комплексное число: %.2f + %.2fi", realPart, imaginaryPart);
         } else {
-            return String.format("Комплексное число: %.2f - %.2fi", realPart, Math.abs(imaginaryPart));
+            return String.format("Комплексное число: %.2f - %.2fi", realPart, -imaginaryPart);
         }
     }
 }
